@@ -64,6 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EditWin.xaml.cs">
+      <DependentUpon>EditWin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Equipment.cs">
       <DependentUpon>Office.tt</DependentUpon>
     </Compile>
@@ -87,6 +90,10 @@
     <Compile Include="Type.cs">
       <DependentUpon>Office.tt</DependentUpon>
     </Compile>
+    <Page Include="EditWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

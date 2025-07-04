@@ -4,6 +4,42 @@
              xmlns:local="clr-namespace:WpfApp13"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <BitmapImage x:Key="LogoImage" />
+        <Color x:Key="MainBackgroundColor">#FFFFFF</Color>
+        <Color x:Key="SecondaryBackgroundColor">#F4E8D3</Color>
+        <Color x:Key="AccentColor">#67BA80</Color>
+
+        <FontWeight x:Key="TextBlockPart">Bold</FontWeight>
+
+        <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource MainBackgroundColor}"/>
+        <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{StaticResource SecondaryBackgroundColor}"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+
+        <FontFamily x:Key="Font">Segoe UI</FontFamily>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontFamily" Value="{StaticResource Font}"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
     </Application.Resources>
 </Application>
