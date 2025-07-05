@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Data.Entity;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Media3D;
-using System.Windows.Input;
+using System.Threading.Tasks;
+using System.Windows;
+using WpfApp13.Interfaces;
 
 namespace WpfApp13
 {
@@ -12,67 +12,104 @@ namespace WpfApp13
     /// </summary>
     public partial class MainWindow : Window
     {
-        OfficeEntities db = new OfficeEntities();
-        private List<Equipment> eqipList;
+        private readonly IEquipmentRepository _repository;
+        private List<Equipment> _equipmentList;
 
-        public MainWindow()
+        public MainWindow(IEquipmentRepository repository)
         {
             InitializeComponent();
-            eqipList = db.Equipment
-                .Include(e => e.Type)
-                .Include(e => e.Status)
-                .ToList();
-            vivod.ItemsSource = eqipList.Select(p => new
+            _repository = repository;
+            LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
+            try
             {
-                p.TypeId,
-                p.Name,
-                Status = p.Status?.Name,
-                Type = p.Type?.Name
-            }).ToList();
+                _equipmentList = await _repository.GetAllAsync();
+
+                vivod.ItemsSource = _equipmentList.Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    Status = p.Status?.Name,
+                    Type = p.Type?.Name
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
+            }
         }
 
-        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        private async void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            new EditWin(null).Show();
-            MessageBox.Show("Вы перешли на окно добавления. Для добавления нового материала, пожалуйста, заполните все поля в форме редактирования.");
-            Close();
+            var editWindow = new EditWin(null, _repository);
+            editWindow.ShowDialog(); 
+            await RefreshDataAsync();
         }
 
-        private void ExitBtn_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Вы вышли из системы.");
-            Close();
-        }
-
-        private void DelBtn_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// метод удаления обьекта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void DelBtn_Click(object sender, RoutedEventArgs e)
         {
             dynamic selected = vivod.SelectedItem;
             if (selected == null)
             {
-                MessageBox.Show("Ошибка! Выберите материал для удаления!");
+                MessageBox.Show("Ошибка! Выберите оборудование для удаления!");
                 return;
             }
 
             int equipId = selected.Id;
 
-            Equipment equipToDelete = db.Equipment.Find(equipId);
-
-            if (equipToDelete != null)
+            try
             {
-                db.Equipment.Remove(equipToDelete);
-                db.SaveChanges();
-                MessageBox.Show("Оборудование успешно удален!");
+                await _repository.DeleteAsync(equipId);
+                await RefreshDataAsync();
+                MessageBox.Show("Оборудование успешно удалено.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка удаления: {ex.Message}");
             }
         }
-
-        private void Vivod_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// переход к старниццу редактирования при двойном нажатии на обьект
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Vivod_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (vivod.SelectedIndex >= 0 && vivod.SelectedIndex < eqipList.Count)
+            dynamic selected = vivod.SelectedItem;
+            if (selected != null)
             {
-                Equipment selectedEquipment = eqipList[vivod.SelectedIndex];
-                new EditWin(selectedEquipment).Show();
-                Close();
+                int id = selected.Id;
+                var equipment = await _repository.GetByIdAsync(id);
+
+                if (equipment != null)
+                {
+                    var editWindow = new EditWin(equipment, _repository);
+                    editWindow.ShowDialog();
+                    await RefreshDataAsync();
+                }
             }
+        }
+        
+        /// <summary>
+        /// метод для обновления списка обьектов
+        /// </summary>
+        /// <returns></returns>
+        private async Task RefreshDataAsync()
+        {
+            await LoadDataAsync();
+        }
+
+        private void ExitBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

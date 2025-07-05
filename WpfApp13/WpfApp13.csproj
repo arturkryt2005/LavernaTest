@@ -70,11 +70,13 @@
     <Compile Include="Equipment.cs">
       <DependentUpon>Office.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IEquipmentRepository.cs" />
     <Compile Include="Office.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Office.tt</DependentUpon>
     </Compile>
+    <Compile Include="Services\EfEquipmentRepository.cs" />
     <Compile Include="sp_helpdiagramdefinition_Result.cs">
       <DependentUpon>Office.tt</DependentUpon>
     </Compile>

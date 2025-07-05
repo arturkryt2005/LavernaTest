@@ -1,8 +1,6 @@
 ﻿<Application x:Class="WpfApp13.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:WpfApp13"
-             StartupUri="MainWindow.xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <BitmapImage x:Key="LogoImage" />
         <Color x:Key="MainBackgroundColor">#FFFFFF</Color>
